@@ -27,7 +27,14 @@ Bundler version 1.15.1
 
 TODO: figure out what a rakefile does
 
+If you get an error about nokogiri failing to install, use the instructions at:
+<http://www.nokogiri.org/tutorials/installing_nokogiri.html> - 
+`sudo apt-get install build-essential patch ruby-dev zlib1g-dev liblzma-dev`
 
+
+If you get an error about capybara-webkit failing to install, use the instructions at:
+<https://www.debugpoint.com/2016/01/how-to-solve-qmake-error-qmake-no-such-file-or-directory/> - 
+`sudo apt-get install qt4-qmake libqt4-dev libqtwebkit-dev`
 
 ## Some ideas on the setup
 
