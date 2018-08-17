@@ -5,4 +5,8 @@ group :test do
   gem 'rspec', '~> 3.7.0'
   gem 'capybara'
   gem 'selenium-webdriver'
+  gem 'faraday'
+  # parsing XML response bodies
+  gem 'faraday_middleware'
+  gem 'multi_xml'
 end
