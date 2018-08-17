@@ -36,6 +36,19 @@ If you get an error about capybara-webkit failing to install, use the instructio
 <https://www.debugpoint.com/2016/01/how-to-solve-qmake-error-qmake-no-such-file-or-directory/> - 
 `sudo apt-get install qt4-qmake libqt4-dev libqtwebkit-dev`
 
+
+Download chromedriver 2.41 from
+<http://chromedriver.storage.googleapis.com/index.html?path=2.41/>
+and add to your $PATH
+
+on Linux:
+
+```bash
+wget http://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
+unzip chromedriver_linux64.zip chromedriver
+```
+
+
 ## Some ideas on the setup
 
 <https://stackoverflow.com/questions/9549450/how-to-setup-a-basic-ruby-project>

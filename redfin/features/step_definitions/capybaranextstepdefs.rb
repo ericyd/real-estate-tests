@@ -1,13 +1,23 @@
+require 'capybara'
 require 'capybara/cucumber'
 
-Capybara.default_driver = :selenium 
+Capybara.default_driver = :selenium_chrome_headless
+
+Capybara.configure do |config|
+  config.run_server = false
+  config.app_host   = 'http://www.redfin.com'
+end
+
+# @session = Capybara::Session.new :selenium_chrome_headless # inst@sessionantiate new session object
+# @session.visit() # use it to call DSL methods
+
 # :selenium_chrome_headless
 # :selenium_chrome
 # :selenium
 
-Capybara.register_driver :rack_test do |app|
-  Capybara::RackTest::Driver.new(app, headers: { 'HTTP_USER_AGENT' => 'Capybara' })
-end
+# Capybara.register_driver :rack_test do |app|
+#   Capybara::RackTest::Driver.new(app, headers: { 'HTTP_USER_AGENT' => 'Capybara' })
+# end
 
 
 # Capybara.use_default_driver
@@ -40,21 +50,35 @@ World CapybaraStepHelper2
 Given("email is {string} and password is {string}") do |email, password|
   @email = email
   @password = password
-  visit('https://redfin.com')
+  visit('/')
   # should test both the dropdown signin and this signin...y'know, for thoroughness
   # visit('https://www.redfin.com/stingray/do/login')
   
 end
 
 When("I sign in") do
-  within("#session") do
-    fill_in 'Email', with: @email
-    fill_in 'Password', with: @password
+  # open "Log In" popup
+  # click "[data-rf-test-name='SignInLink']"
+  click_button "Log In"
+  within(".signInForm") do
+    # click_on ".emailSignInButton"
+    click_button "Continue with Email"
   end
-  click_button 'Sign in'
-  @actual_answer = 'yep'
+  within(".SignInEmailForm") do
+    fill_in "emailInput", with: @email
+    fill_in "passwordInput", with: @password
+  end
+
+  click_button 'Sign In'
+
+  begin
+    name_container = find(".NameAndThumbnail")
+    @actual_name = name_container.find(".name").text
+  rescue Capybara::ElementNotFound => exception
+    @actual_name = ""
+  end
 end
 
-Then("I should see my name in the upper corner") do
-  expect(@actual_answer).to eq('yep')
+Then("{string} should display in the menu") do |name|
+  expect(@actual_name).to eq(name)
 end

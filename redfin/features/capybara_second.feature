@@ -3,11 +3,11 @@ Feature: Capybara second
 
   Scenario Outline: What does Capybara do
     Given email is <email> and password is <password>
-    When I try to log in
-    Then I should see my name in the upper corner
+    When I sign in
+    Then <name> should display in the menu
 
   Examples:
-    | email | password |
-    | "acornsTestAccount@guerrillamail.com" | "Acornstest1000" |
-    | "anotheremail@anotherdomain.com" | "Acornstest100" |
-    | "anythingelse" | "anythingelse" |
+    | email | password | name |
+    | "acornsTestAccount@guerrillamail.com" | "Acornstest1000" | "Eric" |
+    | "anotheremail@anotherdomain.com" | "Acornstest100" | "" |
+    | "anythingelse" | "anythingelse" | "" |
