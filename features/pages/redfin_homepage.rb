@@ -1,7 +1,7 @@
 require_relative './redfin'
 
 class RedfinHomepage < Redfin
-  def sign_in(email = "", password = "")
+  def sign_in_from_home(email = "", password = "")
     click_button "Log In"
 
     within(".signInForm") do
@@ -13,7 +13,15 @@ class RedfinHomepage < Redfin
       fill_in "passwordInput", with: password
     end
 
-    click_button 'Sign In'
+    click_button "Sign In"
+  end
+
+  def sign_in_from_secondary(email = "", password = "")
+    fill_in "email_input", with: email
+    fill_in "password_input", with: password
+    # this page a somewhat non-semantic structure;
+    # submitting form by pressing `enter` is easiest
+    find("[name='password_input'").send_keys :enter
   end
 
   def check_login_status()

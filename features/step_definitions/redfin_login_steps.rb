@@ -16,14 +16,19 @@ end
 Given("email is {string} and password is {string}") do |email, password|
   @email = email
   @password = password
-  visit('/')
-  @redfin_home.resize_full
-  # should test both the dropdown signin and this signin...y'know, for thoroughness
-  # visit('https://www.redfin.com/stingray/do/login')
 end
 
-When("I sign in") do
-  @redfin_home.sign_in @email, @password
+When("I sign in from home") do
+  visit("/")
+  @redfin_home.resize_full
+  @redfin_home.sign_in_from_home @email, @password
+  @name_badge_visibility, @name = @redfin_home.check_login_status
+end
+
+When("I sign in from secondary") do
+  visit("/stingray/do/login")
+  @redfin_home.resize_full
+  @redfin_home.sign_in_from_secondary @email, @password
   @name_badge_visibility, @name = @redfin_home.check_login_status
 end
 
