@@ -1,14 +1,6 @@
-require 'capybara/dsl'
+require_relative './redfin'
 
-class RedfinSearch
-  include Capybara::DSL
-
-  def resize_full()
-    page.windows.each do |window|
-      window.resize_to 1920, 1080
-    end
-  end
-
+class RedfinSearch < Redfin
   def search_for(term)
     within("#homepageTabContainer") do
       fill_in "search-box-input", with: term
