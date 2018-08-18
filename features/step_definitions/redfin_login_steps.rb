@@ -8,19 +8,6 @@ Capybara.configure do |config|
   config.app_host   = 'http://www.redfin.com'
 end
 
-# Example module if needed
-# module CapybaraStepHelper
-#   def is_capybara_invoked?(status)
-#     if status == 'yes'
-#       'yep'
-#     else
-#       'no way'
-#     end
-#   end
-# end
-# World CapybaraStepHelper
-
-
 Given("email is {string} and password is {string}") do |email, password|
   @email = email
   @password = password
