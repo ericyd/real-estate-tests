@@ -10,5 +10,6 @@ Feature: Redfin can log in
   Examples:
     | email | password | visibility | name |
     | "acornsTestAccount@guerrillamail.com" | "Acornstest1000" | "visible" | "Eric" |
-    | "anotheremail@anotherdomain.com" | "Acornstest100" | "hidden" | "" |
-    | "anythingelse" | "anythingelse" | "hidden" | "" |
+    | "wrong_email_addr@guerrillamail.com" | "Acornstest1000" | "hidden" | "" |
+    | "acornsTestAccount@guerrillamail.com" | "wrong_password" | "hidden" | "" |
+    | "another_email@anotherdomain.com" | "another_password" | "hidden" | "" |
