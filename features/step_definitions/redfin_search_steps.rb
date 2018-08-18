@@ -5,51 +5,43 @@ module Pages
   class RedfinSearch
     include Capybara::DSL
 
-    def add_filter(name, value)
+    def add_filter(name, value, min_max)
       case name
       when 'Price'
-        add_price_filter value
+        add_price_filter value, min_max
       when 'Baths'
+        # baths is always "at least" - no mix_max required
         add_baths_filter value
       when 'Type'
+        # type is incompatible with min_max
         add_type_filter value
       when 'Beds'
-        add_beds_filter value
+        add_beds_filter value, min_max
       when 'Sq.Ft.'
-        add_sqft_filter value
+        add_sqft_filter value, min_max
       else
         puts "Unable to apply filter '#{name}: #{value}'"
       end
     end
-    
-    def add_price_filter(value)
-      within(".minPrice") do
+
+    def select_from_flyout(class_name, value)
+      within(class_name) do
         find(".input").click
         find(".flyout").find(".option", text: value).click
       end
+    end
+    
+    def add_price_filter(value, min_max)
+      select_from_flyout ".#{min_max}Price", value
     end
 
     def add_baths_filter(value)
-      value_map = {
-        "No min" => 0,
-        "1+" => 1,
-        "1.25+" => 2,
-        "2+" => 3,
-        "3+" => 4,
-        "4+" => 5
-      }
-      within(".baths") do
-        (1..value_map[value]).each do |i|
-          find(".step-up").click
-        end
-      end
+      # baths has slightly different markup, need to target a nested `.input`
+      select_from_flyout ".baths > .input", value
     end
 
-    def add_beds_filter(value)
-      within(".minBeds") do
-        find(".input").click
-        find(".flyout").find(".option", text: value).click
-      end
+    def add_beds_filter(value, min_max)
+      select_from_flyout ".#{min_max}Beds", value
     end
 
     def add_type_filter(value)
@@ -58,8 +50,8 @@ module Pages
       end
     end
 
-    def add_sqft_filter(value)
-      
+    def add_sqft_filter(value, min_max)
+      select_from_flyout ".sqft#{min_max.capitalize}", value
     end
 
   end
@@ -67,19 +59,14 @@ end
 World Pages
 
 
-def convert(value, type)
-  case type
-  when 'Price'
+def to_number(value, type)
+  if (type == "Price")
     # convert dollar-formatted text to float
     value.sub! "M", "000000"
     value.sub! "k", "000"
-    value.gsub! /[$,]/, ""
-    value.to_f
-  # when 'Address'
-  #   0
-  else
-    value.to_f
   end
+  value.gsub! /[$,]/, ""
+  value.to_f
 end
 
 
@@ -99,43 +86,41 @@ end
 Given("I search for {string}") do |zipcode|
   @zipcode = zipcode
   visit('/')
-  within("#homepageTabContainer") do
-    fill_in "search-box-input", with: zipcode
-    click_button "Search"
-  end
-  # force capybara to wait for search page to load
-  within("#headerUnifiedSearch") do
-    # puts page.title # => "97212, OR Real Estate & Homes for Sale | Redfin"
-  end
-
   # window must be full size for correct data table columns to display
   page.windows.each do |window|
     window.resize_to 1920, 1080
   end
+  within("#homepageTabContainer") do
+    fill_in "search-box-input", with: zipcode
+    click_button "Search"
+  end
+
+  # force capybara to wait for search page to load
+  find("#headerUnifiedSearch")
 end
 
-When("I search with the following minimum filters:") do |table|
-  @filters = table.hashes # << { 'name' => 'zipcode', 'value' => @zipcode }
+When("I search with the following filters:") do |table|
+  @filters = table.hashes
+
+  # open filter form
   find(".wideSidepaneFilterButton").click
+
+  # apply filters
   within("#searchForm") do
     @filters.each do |filter|
-      @redfin.add_filter filter['name'], filter['value']
+      @redfin.add_filter filter['name'], filter['value'], filter['min_max']
     end
 
     click_button "Apply Filters"
   end
 
+  # switch to table view
   within(".displayModeToggler") do
     click_button "Table"
   end
-
-  # force data table to load
-  within(".ReactDataTable") do
-    find("button", text: "Location")
-  end
 end
 
-Then("nothing") do
+Then("result set should match search criteria") do
   within(".ReactDataTable") do
     # map columns for easy comparisons in the table rows
     # default to 0 so a valid column index is always returned
@@ -148,15 +133,25 @@ Then("nothing") do
       end
     end
 
+    # Verify property values meet the filter criteria
     all(".tableRow").each do |result|
       @filters.each do |filter|
         prop = result.all('td')[columns[filter['name']]].text
-        # puts "prop: #{filter['name']}, value: #{prop}, expected: #{filter['value']}, ok: #{filter['value'].to_f <= prop.to_f}"
-        actual = convert(prop, filter['name'])
-        expected = convert(filter['value'], filter['name'])
-        # puts "actual: #{actual}, expected: #{expected}"
-        expect(actual).to be >= (expected)
+        actual = to_number prop, filter['name']
+        expected = to_number filter['value'], filter['name']
+        if (filter['min_max'] == 'min')
+          expect(actual).to be >= (expected)
+        else
+          expect(actual).to be <= (expected)
+        end
       end
+
+    end
+    
+    # Verify property is in correct zip code
+    all(".HomeCardContainer").each do |card|
+      city_state_zip = card.find(".cityStateZip").text
+      expect(city_state_zip).to match(Regexp.new(@zipcode)), "expected address '#{city_state_zip}' to contain zipcode #{@zipcode}"
     end
   end
 end
