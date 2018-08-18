@@ -53,3 +53,14 @@ unzip chromedriver_linux64.zip chromedriver
 
 <https://stackoverflow.com/questions/9549450/how-to-setup-a-basic-ruby-project>
 <https://stackoverflow.com/questions/614309/ideal-ruby-project-structure>
+
+
+
+## Running tests
+
+Currently have to run `cucumber` and `rspec` independently
+
+```bash
+cucumber
+rspec spec/zillow_spec.rb
+```

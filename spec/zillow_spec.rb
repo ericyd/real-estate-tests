@@ -1,5 +1,5 @@
 # not sure this is the best way to import the token
-require_relative "../api"
+require_relative "../lib/api"
 require "faraday"
 require "faraday_middleware"
 
