@@ -42,17 +42,26 @@ unzip chromedriver_linux64.zip chromedriver
 
 ## Run tests
 
-You must run `cucumber` and `rspec` independently
-<!-- TODO: investigate `rake` to simplify -->
+[Rake](https://ruby.github.io/rake/) will run both the Cucumber (Redfin) and Rspec (Zillow) tests.
 
 ```bash
-cucumber && rspec spec/zillow_spec.rb
+rake
 ```
 
 This will test the following functionality:
 
 - [redfin.com](https://www.redfin.com/): test basic authentication as well as searching properties with [Capybara](http://teamcapybara.github.io/capybara/) and [Cucumber](https://docs.cucumber.io/).
 - [Zillow API](https://www.zillow.com/howto/api/APIOverview.htm): test property searching with [Faraday](https://github.com/lostisland/faraday) and [RSpec](http://rspec.info/).
+
+
+If you prefer to run the tests individually, you can use
+
+```bash
+# zillow tests
+rake spec
+# redfin tests
+rake features
+```
 
 
 <!-- 
