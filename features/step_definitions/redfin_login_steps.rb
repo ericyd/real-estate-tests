@@ -29,7 +29,7 @@ end
 
 
 
-module CapybaraStepHelper2
+module CapybaraStepHelper
   def is_capybara_invoked?(status)
     if status == 'yes'
       'yep'
@@ -38,7 +38,7 @@ module CapybaraStepHelper2
     end
   end
 end
-World CapybaraStepHelper2
+World CapybaraStepHelper
 
 
 
@@ -74,11 +74,17 @@ When("I sign in") do
   begin
     name_container = find(".NameAndThumbnail")
     @actual_name = name_container.find(".name").text
+    @name_badge_visibility = "visible"
   rescue Capybara::ElementNotFound => exception
     @actual_name = ""
+    @name_badge_visibility = "hidden"
   end
 end
 
 Then("{string} should display in the menu") do |name|
   expect(@actual_name).to eq(name)
+end
+
+Then("the name badge should be {string}") do |visibility|
+  expect(@name_badge_visibility).to eq(visibility)
 end
