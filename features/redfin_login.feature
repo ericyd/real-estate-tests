@@ -1,7 +1,7 @@
-Feature: Capybara second
-  test scenario for Capybara
+Feature: Redfin can log in
+  Check logging in with valid and invalid credentials
 
-  Scenario Outline: What does Capybara do
+  Scenario Outline: Log in to Redin.com
     Given email is <email> and password is <password>
     When I sign in
     Then the name badge should be <visibility>
