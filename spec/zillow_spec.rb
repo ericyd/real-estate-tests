@@ -2,35 +2,36 @@ require "zillow/api"
 require "faraday"
 require "faraday_middleware"
 
-# References
+# API endpoint references
 # https://www.zillow.com/howto/api/GetDeepSearchResults.htm
 # https://www.zillow.com/howto/api/GetSearchResults.htm
 # https://www.zillow.com/howto/api/GetUpdatedPropertyDetails.htm
-# http://www.zillow.com/webservice/GetUpdatedPropertyDetails.htm?zws-id=X1-ZWz18ey83b4gsr_ako3m&zpid=48749425 
 
-
-# declare search parameters
-searchParams = {
-  'zws-id' => ZillowAPI::TOKEN,
-  'address' => '2028 NE Hancock St',
-  'citystatezip' => '97212'
-}
-
-propertyDetailParams = {
-  'zws-id'.to_sym => ZillowAPI::TOKEN,
-  :zpid => '48749425'
-}
-
-# use middleware to automatically parse xml responses
-conn = Faraday.new 'http://www.zillow.com/webservice' do |conn|
-  conn.response :xml,  :content_type => /\bxml$/
-  conn.adapter Faraday.default_adapter
-end
 
 RSpec.describe "Zillow API" do
+  before(:all) do 
+    zwsid = { 'zws-id' => ZillowAPI::TOKEN }
+
+    # declare search parameters
+    @searchParams = zwsid.merge({
+      'address' => '2028 NE Hancock St',
+      'citystatezip' => '97212'
+    })
+
+    @propertyDetailParams = zwsid.merge({
+      'zpid' => '48749425'
+    })
+
+    # use middleware to automatically parse xml responses
+    @conn = Faraday.new(:url => 'http://www.zillow.com/webservice') do |faraday|
+      faraday.response :xml,  :content_type => /\bxml$/
+      faraday.adapter Faraday.default_adapter
+    end
+  end
+
   it "gets property details" do
     # get API
-    res = conn.get 'http://www.zillow.com/webservice/GetUpdatedPropertyDetails.htm', propertyDetailParams
+    res = @conn.get '/webservice/GetUpdatedPropertyDetails.htm', @propertyDetailParams
 
     # verify status and response message
     expect(res.status).to eq(200)
@@ -45,7 +46,7 @@ RSpec.describe "Zillow API" do
 
   it "gets search results" do
     # get API
-    res = conn.get 'http://www.zillow.com/webservice/GetDeepSearchResults.htm', searchParams
+    res = @conn.get '/webservice/GetDeepSearchResults.htm', @searchParams
 
     # verify status and response message
     expect(res.status).to eq(200)
@@ -58,23 +59,3 @@ RSpec.describe "Zillow API" do
     expect(results['result']['address']['street']).to eq('2028 NE Hancock St')
   end
 end
-
-
-# puts searchParams
-
-
-# this is a more ideal method, but right now need to just get some tests written
-# 
-# http://www.zillow.com/webservice/GetDeepSearchResults.htm?zws-id=X1-ZWz18ey83b4gsr_ako3m&address=2028+NE+Hancock+St&citystatezip=97212
-# conn = Faraday.new(:url => 'http://www.zillow.com/webservice')
-# conn = Faraday::Connection.new 'http://www.zillow.com/webservice'
-# response = conn.get '/GetUpdatedPropertyDetails.htm', propertyDetailParams
-
-
-
-
-# response = Faraday.get 'http://www.zillow.com/webservice/GetDeepSearchResults.htm', searchParams
-# puts response.body.length
-
-
-# puts response.body
