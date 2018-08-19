@@ -105,7 +105,9 @@ RSpec.describe 'Zillow API' do
     # verify status and response message
     body = ResponseBody.new(res.body)
     expect(res.status).to eq(200)
-    expect(body.message_text).to eq('Error: no exact match found for input address')
+    expect(body.message_text).to eq(
+      'Error: no exact match found for input address'
+    )
     expect(body.message_code).to eq('508')
     expect(body.address.nil?).to eq(true)
   end
@@ -126,6 +128,42 @@ RSpec.describe 'Zillow API' do
       'Error: invalid or missing ZWSID parameter'
     )
     expect(body.message_code).to eq('2')
+    expect(body.address.nil?).to eq(true)
+  end
+
+  it 'should require address parameter' do
+    # set expected values
+    citystatezip = '97212'
+
+    # get API
+    res = @conn.get '/webservice/GetDeepSearchResults.htm',
+                    @zwsid.merge('citystatezip' => citystatezip)
+
+    # verify status and response message
+    body = ResponseBody.new(res.body)
+    expect(res.status).to eq(200)
+    expect(body.message_text).to eq(
+      'Error: no address specified'
+    )
+    expect(body.message_code).to eq('500')
+    expect(body.address.nil?).to eq(true)
+  end
+
+  it 'should require citystatezip parameter' do
+    # set expected values
+    address = '2028 NE Hancock St'
+
+    # get API
+    res = @conn.get '/webservice/GetDeepSearchResults.htm',
+                    @zwsid.merge('address' => address)
+
+    # verify status and response message
+    body = ResponseBody.new(res.body)
+    expect(res.status).to eq(200)
+    expect(body.message_text).to eq(
+      'Error: invalid or missing city/state/ZIP parameter'
+    )
+    expect(body.message_code).to eq('501')
     expect(body.address.nil?).to eq(true)
   end
 
