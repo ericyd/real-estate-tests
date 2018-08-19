@@ -2,22 +2,20 @@
 
 A series of tests for Redfin and Zillow
 
-Ruby version 2.3.1p112
-gem version 2.6.12
-Bundler version 1.15.1
-
 
 ## Requirements
 
-- [Ruby](https://www.ruby-lang.org/en/downloads/) (version 2.3.1 was used to develop the tests)
-- [bundler](https://bundler.io/): `gem install bundler`
-
+- [Ruby](https://www.ruby-lang.org/en/downloads/): `sudo apt-get install ruby` (version 2.3.1 was used to develop the tests)
+- [bundler](https://bundler.io/): `sudo gem install bundler`
+- [Chrome](https://www.google.com/chrome/): download from Google or [follow these command-line instructions for Ubuntu-based distros](https://www.howopensource.com/2011/10/install-google-chrome-in-ubuntu-11-10-11-04-10-10-10-04/)
 
 ## Setup
 
-### 1. Install dependencies
+### 1. Clone repo and install dependencies
 
 ```bash
+git clone https://github.com/ericyd/real-estate-tests.git
+cd real-estate-tests
 bundle install
 ```
 
@@ -62,13 +60,3 @@ rake spec
 # redfin tests
 rake features
 ```
-
-
-<!-- 
-
-Some thoughts from the internet on the project setup
-
-<https://stackoverflow.com/questions/9549450/how-to-setup-a-basic-ruby-project>
-<https://stackoverflow.com/questions/614309/ideal-ruby-project-structure>
-
--->
