@@ -1,5 +1,3 @@
-require_relative './redfin'
-
 # Page Object for Redfin Homepage
 class RedfinHomepage < Redfin
   def sign_in_from_home(email = '', password = '')
@@ -20,7 +18,7 @@ class RedfinHomepage < Redfin
   def sign_in_from_secondary(email = '', password = '')
     fill_in 'email_input', with: email
     fill_in 'password_input', with: password
-    # this page a somewhat non-semantic structure;
+    # this page has a somewhat non-semantic structure;
     # submitting form by pressing `enter` is easiest
     find('[name="password_input"').send_keys :enter
   end

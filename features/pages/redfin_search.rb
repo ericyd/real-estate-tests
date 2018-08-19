@@ -1,5 +1,3 @@
-require_relative './redfin'
-
 # Page Object for Redfin Search
 class RedfinSearch < Redfin
   def search_for(term)

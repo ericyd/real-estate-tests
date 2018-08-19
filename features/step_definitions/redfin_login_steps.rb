@@ -1,6 +1,5 @@
 require 'capybara'
 require 'capybara/cucumber'
-require_relative '../pages/redfin_homepage'
 
 # Options - :selenium_chrome, :selenium_chrome_headless
 Capybara.default_driver = :selenium_chrome_headless
