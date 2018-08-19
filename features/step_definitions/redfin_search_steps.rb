@@ -4,6 +4,7 @@ require_relative '../pages/redfin_search'
 
 # Options - :selenium_chrome, :selenium_chrome_headless
 Capybara.default_driver = :selenium_chrome_headless
+Capybara.default_max_wait_time = 5
 
 Capybara.configure do |config|
   config.run_server = false
