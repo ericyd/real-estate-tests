@@ -1,0 +1,24 @@
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Style/BlockComments:
+  Exclude:
+    - 'spec/spec_helper.rb'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Metrics/LineLength:
+  Enabled: false
+
+# false positive when using Symbol as key, e.g. in Faraday.new
+Style/HashSyntax:
+  Exclude:
+    - 'spec/**/*.rb'
