@@ -5,7 +5,7 @@ A series of tests for Redfin and Zillow
 
 ## Requirements
 
-- [Ruby](https://www.ruby-lang.org/en/downloads/): `sudo apt-get install ruby` (version 2.3.1 was used to develop the tests)
+- [Ruby](https://www.ruby-lang.org/en/downloads/): `sudo apt-get install ruby`
 - [bundler](https://bundler.io/): `sudo gem install bundler`
 - [Chrome](https://www.google.com/chrome/): download from Google or [follow these command-line instructions for Ubuntu-based distros](https://www.howopensource.com/2011/10/install-google-chrome-in-ubuntu-11-10-11-04-10-10-10-04/)
 
@@ -59,4 +59,10 @@ If you prefer to run the tests individually, you can use
 rake spec
 # redfin tests
 rake features
+# run linter
+rake lint
 ```
+
+## Compatibility
+
+This was developed on Linux Mint 18.3 and tested with Ruby 2.3.1, 2.3.7, and 2.5.1
