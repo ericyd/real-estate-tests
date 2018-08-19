@@ -18,17 +18,9 @@ Given('email is {string} and password is {string}') do |email, password|
   @password = password
 end
 
-When('I sign in from home') do
-  visit('/')
+When(/I sign in from (home|secondary)/) do |location|
   @redfin_home.resize_full
-  @redfin_home.sign_in_from_home @email, @password
-  @name_badge_visibility, @name = @redfin_home.check_login_status
-end
-
-When('I sign in from secondary') do
-  visit('/stingray/do/login')
-  @redfin_home.resize_full
-  @redfin_home.sign_in_from_secondary @email, @password
+  @redfin_home.sign_in_from location.to_sym, @email, @password
   @name_badge_visibility, @name = @redfin_home.check_login_status
 end
 

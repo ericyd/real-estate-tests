@@ -1,6 +1,15 @@
 # Page Object for Redfin Homepage
 class RedfinHomepage < Redfin
+  def sign_in_from(location = :home, email = '', password = '')
+    if location == :home
+      sign_in_from_home email, password
+    else
+      sign_in_from_secondary email, password
+    end
+  end
+
   def sign_in_from_home(email = '', password = '')
+    visit('/')
     click_button 'Log In'
 
     within('.signInForm') do
@@ -16,6 +25,7 @@ class RedfinHomepage < Redfin
   end
 
   def sign_in_from_secondary(email = '', password = '')
+    visit('/stingray/do/login')
     fill_in 'email_input', with: email
     fill_in 'password_input', with: password
     # this page has a somewhat non-semantic structure;
