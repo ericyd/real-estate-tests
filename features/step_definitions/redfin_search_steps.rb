@@ -30,8 +30,10 @@ When('I search with the following filters:') do |table|
 end
 
 Then('result set should match search criteria') do
-  # Verify property values meet the filter criteria
   results = @redfin_search.map_filters_to_results @filters
+  # Verify at least one result is returned
+  expect(results.length).to be > 0
+  # Verify property values meet the filter criteria
   results.each do |values|
     values.each do |value|
       if value['comparison'] == 'min'
